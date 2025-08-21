@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetData 英语课程中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei','PingFang SC','Helvetica Neue',Arial,sans-serif; background: linear-gradient(135deg,#43cea2 0%,#185a9d 100%); color:#233; min-height:100vh; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+        .header { color:#fff; text-align:center; margin:10px 0 22px; }
+        .header h1 { font-size:2.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.25) }
+        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:18px; }
+        .card { background:#fff; border-radius:16px; padding:18px; box-shadow: 0 12px 28px rgba(0,0,0,0.12); transition:.2s; display:flex; flex-direction:column; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 18px 32px rgba(0,0,0,0.18); }
+        .card h3 { color:#185a9d; margin-bottom:6px; font-size:1.2rem; }
+        .desc { color:#555; font-size:.95rem; margin-bottom:10px; flex:1; }
+        .tags { margin-bottom:12px; }
+        .tag { display:inline-block; background:#e8f4ff; color:#185a9d; padding:2px 8px; border-radius:999px; font-size:12px; margin-right:6px; }
+        .actions { display:flex; gap:10px; }
+        .btn { text-decoration:none; background:#185a9d; color:#fff; padding:8px 12px; border-radius:10px; font-size:.9rem; text-align:center; flex:1; }
+        .btn.secondary { background:#6c757d; }
+        .footer { text-align:center; color:#fff; opacity:.85; margin-top:26px; }
+        @media (max-width:640px){ .header h1{ font-size:1.8rem } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>SweetData 英语课程中心</h1>
+        <div>选择你的课程进入学习</div>
+    </div>
+    <div id="grid" class="grid"></div>
+    <div class="footer">© 2025 SweetData</div>
+</div>
+<script>
+    const DEFAULT_COURSES = [
+        { id:'golden-grammar-adj-adv', title:'黄金语法：形容词&副词', description:'形容词与副词的系统学习与互动练习', path:'english/junior/golden-grammar-adj-adv.html', tags:['初中','语法'] },
+        { id:'junior-grammar-fun-anime', title:'初中语法趣味课：动漫带你学', description:'轻松幽默、动漫角色引导的初中语法入门', path:'english/junior/junior-grammar-fun-anime.html', tags:['初中','趣味','动漫'] }
+    ];
+    async function loadCourses(){
+        try {
+            const res = await fetch('english/junior/courses.json', { cache:'no-cache' });
+            const data = await res.json();
+            return Array.isArray(data.courses) && data.courses.length
+                ? data.courses.map(c => ({...c, path:`english/junior/${c.path}`}))
+                : DEFAULT_COURSES;
+        } catch(e){ return DEFAULT_COURSES; }
+    }
+    function render(courses){
+        const grid=document.getElementById('grid'); grid.innerHTML='';
+        courses.forEach(c=>{
+            const card=document.createElement('div'); card.className='card';
+            card.innerHTML = `
+                <h3>📘 ${c.title}</h3>
+                <div class="desc">${c.description||''}</div>
+                <div class="tags">${(c.tags||[]).map(t=>`<span class='tag'>${t}</span>`).join('')}</div>
+                <div class="actions">
+                    <a class="btn" href="${c.path}">进入</a>
+                    <a class="btn secondary" href="${c.path}" target="_blank" rel="noopener">新窗口</a>
+                </div>`;
+            grid.appendChild(card);
+        });
+    }
+    (async()=>{ render(await loadCourses()); })();
+</script>
+</body>
+</html>

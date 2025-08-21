@@ -1,0 +1,18 @@
+{
+  "courses": [
+    {
+      "id": "golden-grammar-adj-adv",
+      "title": "黄金语法：形容词&副词",
+      "description": "形容词与副词的系统学习与互动练习",
+      "path": "golden-grammar-adj-adv.html",
+      "tags": ["语法", "形容词", "副词"]
+    },
+    {
+      "id": "junior-grammar-fun-anime",
+      "title": "初中语法趣味课：动漫带你学",
+      "description": "轻松幽默、动漫角色引导的初中语法入门",
+      "path": "junior-grammar-fun-anime.html",
+      "tags": ["初中", "趣味", "动漫"]
+    }
+  ]
+}

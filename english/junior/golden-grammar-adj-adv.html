@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金语法：形容词&副词 - 网页课件</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border-left: 5px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "📚";
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            border-bottom: 2px solid #e0e6ff;
+            padding-bottom: 8px;
+        }
+
+        .example-box {
+            background: #fff;
+            border: 2px solid #e0e6ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .example-box::before {
+            content: "💡";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 5px 10px;
+            font-size: 1.2rem;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .grammar-rule {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #fcb69f;
+        }
+
+        .grammar-rule h4 {
+            color: #d63384;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .practice-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .practice-section h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .practice-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .answer {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .show-answer {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .show-answer:hover {
+            background: #0056b3;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .navigation a {
+            display: block;
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .navigation a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                position: static;
+                margin: 20px 0;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 黄金语法：形容词&副词</h1>
+            <p>掌握英语语法的核心要素，提升语言表达能力</p>
+        </div>
+
+        <div class="content">
+            <!-- 形容词部分 -->
+            <div class="section" id="adjectives">
+                <h2>形容词 (Adjectives)</h2>
+                
+                <h3>什么是形容词？</h3>
+                <p>形容词是用来修饰名词或代词的词，用来描述人或事物的性质、特征、状态等。</p>
+                
+                <div class="example-box">
+                    <strong>例句：</strong>
+                    <ul>
+                        <li>She is a <span class="highlight">beautiful</span> girl. (她是一个美丽的女孩。)</li>
+                        <li>The <span class="highlight">red</span> car is very fast. (那辆红色的车很快。)</li>
+                        <li>He feels <span class="highlight">happy</span> today. (他今天感到很开心。)</li>
+                    </ul>
+                </div>
+
+                <h3>形容词的分类</h3>
+                
+                <div class="grammar-rule">
+                    <h4>1. 性质形容词</h4>
+                    <p>描述事物的基本性质：big, small, good, bad, hot, cold, new, old</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>2. 颜色形容词</h4>
+                    <p>描述颜色：red, blue, green, yellow, black, white, pink, purple</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>3. 情感形容词</h4>
+                    <p>描述情感状态：happy, sad, angry, excited, worried, surprised</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>4. 数量形容词</h4>
+                    <p>描述数量：many, few, several, some, all, none</p>
+                </div>
+
+                <h3>形容词的位置</h3>
+                <div class="example-box">
+                    <strong>形容词通常放在：</strong>
+                    <ul>
+                        <li><strong>名词前：</strong> a <span class="highlight">big</span> house</li>
+                        <li><strong>be动词后：</strong> The house is <span class="highlight">big</span></li>
+                        <li><strong>感官动词后：</strong> The food tastes <span class="highlight">delicious</span></li>
+                    </ul>
+                </div>
+
+                <h3>形容词的比较级和最高级</h3>
+                <div class="example-box">
+                    <strong>规则变化：</strong>
+                    <ul>
+                        <li>单音节：big → bigger → biggest</li>
+                        <li>双音节以y结尾：happy → happier → happiest</li>
+                        <li>多音节：beautiful → more beautiful → most beautiful</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 副词部分 -->
+            <div class="section" id="adverbs">
+                <h2>副词 (Adverbs)</h2>
+                
+                <h3>什么是副词？</h3>
+                <p>副词是用来修饰动词、形容词、其他副词或整个句子的词，用来表示时间、地点、方式、程度等。</p>
+                
+                <div class="example-box">
+                    <strong>例句：</strong>
+                    <ul>
+                        <li>He runs <span class="highlight">quickly</span>. (他跑得很快。)</li>
+                        <li>The movie is <span class="highlight">very</span> interesting. (这部电影很有趣。)</li>
+                        <li>She speaks English <span class="highlight">fluently</span>. (她英语说得很流利。)</li>
+                    </ul>
+                </div>
+
+                <h3>副词的分类</h3>
+                
+                <div class="grammar-rule">
+                    <h4>1. 方式副词</h4>
+                    <p>描述动作的方式：quickly, slowly, carefully, well, badly, easily</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>2. 时间副词</h4>
+                    <p>描述时间：now, then, today, yesterday, tomorrow, always, never</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>3. 地点副词</h4>
+                    <p>描述地点：here, there, everywhere, nowhere, upstairs, downstairs</p>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>4. 程度副词</h4>
+                    <p>描述程度：very, quite, rather, too, enough, almost, nearly</p>
+                </div>
+
+                <h3>副词的构成</h3>
+                <div class="example-box">
+                    <strong>常见构成方式：</strong>
+                    <ul>
+                        <li><strong>形容词 + ly：</strong> quick → quickly, happy → happily</li>
+                        <li><strong>形容词 + ly（去y加ily）：</strong> easy → easily, busy → busily</li>
+                        <li><strong>不规则变化：</strong> good → well, fast → fast</li>
+                    </ul>
+                </div>
+
+                <h3>副词的位置</h3>
+                <div class="example-box">
+                    <strong>副词位置规则：</strong>
+                    <ul>
+                        <li><strong>修饰动词：</strong> He speaks <span class="highlight">clearly</span>.</li>
+                        <li><strong>修饰形容词：</strong> She is <span class="highlight">very</span> beautiful.</li>
+                        <li><strong>修饰副词：</strong> He runs <span class="highlight">very</span> quickly.</li>
+                        <li><strong>句首或句尾：</strong> <span class="highlight">Yesterday</span>, I went to school.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 形容词和副词的区别 -->
+            <div class="section" id="difference">
+                <h2>形容词 vs 副词的区别</h2>
+                
+                <div class="example-box">
+                    <strong>关键区别：</strong>
+                    <ul>
+                        <li><strong>形容词：</strong> 修饰名词，回答"什么样的"问题</li>
+                        <li><strong>副词：</strong> 修饰动词、形容词、副词，回答"怎么样"的问题</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <strong>对比例句：</strong>
+                    <ul>
+                        <li>He is a <span class="highlight">good</span> student. (形容词修饰名词student)</li>
+                        <li>He studies <span class="highlight">well</span>. (副词修饰动词studies)</li>
+                        <li>She is <span class="highlight">beautiful</span>. (形容词作表语)</li>
+                        <li>She sings <span class="highlight">beautifully</span>. (副词修饰动词sings)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 练习部分 -->
+            <div class="practice-section" id="practice">
+                <h3>📝 练习时间</h3>
+                
+                <div class="practice-item">
+                    <p><strong>练习1：</strong> 选择正确的形容词或副词填空</p>
+                    <p>1. She is a very _____ (beautiful/beautifully) girl.</p>
+                    <p>2. He speaks English _____ (good/well).</p>
+                    <p>3. The weather is _____ (terrible/terribly) today.</p>
+                    <button class="show-answer" onclick="toggleAnswer(this)">查看答案</button>
+                    <div class="answer">
+                        <strong>答案：</strong>
+                        <p>1. beautiful (形容词修饰名词girl)</p>
+                        <p>2. well (副词修饰动词speaks)</p>
+                        <p>3. terrible (形容词作表语)</p>
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <p><strong>练习2：</strong> 将形容词转换为副词</p>
+                    <p>1. quick → _____</p>
+                    <p>2. happy → _____</p>
+                    <p>3. careful → _____</p>
+                    <button class="show-answer" onclick="toggleAnswer(this)">查看答案</button>
+                    <div class="answer">
+                        <strong>答案：</strong>
+                        <p>1. quickly</p>
+                        <p>2. happily</p>
+                        <p>3. carefully</p>
+                    </div>
+                </div>
+
+                <div class="practice-item">
+                    <p><strong>练习3：</strong> 用比较级造句</p>
+                    <p>用big, beautiful, interesting的比较级各造一个句子</p>
+                    <button class="show-answer" onclick="toggleAnswer(this)">查看答案</button>
+                    <div class="answer">
+                        <strong>参考答案：</strong>
+                        <p>1. My house is bigger than yours.</p>
+                        <p>2. She is more beautiful than her sister.</p>
+                        <p>3. This book is more interesting than that one。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="section" id="summary">
+                <h2>📋 学习总结</h2>
+                
+                <div class="grammar-rule">
+                    <h4>形容词要点：</h4>
+                    <ul>
+                        <li>修饰名词和代词</li>
+                        <li>通常放在名词前或be动词后</li>
+                        <li>有比较级和最高级形式</li>
+                        <li>回答"什么样的"问题</li>
+                    </ul>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>副词要点：</h4>
+                    <ul>
+                        <li>修饰动词、形容词、其他副词</li>
+                        <li>通常以-ly结尾</li>
+                        <li>位置相对灵活</li>
+                        <li>回答"怎么样"的问题</li>
+                    </ul>
+                </div>
+
+                <div class="grammar-rule">
+                    <h4>记忆技巧：</h4>
+                    <ul>
+                        <li>形容词描述"是什么样"</li>
+                        <li>副词描述"怎么样做"</li>
+                        <li>大多数副词 = 形容词 + ly</li>
+                        <li>注意不规则变化（good → well, fast → fast）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🌟 掌握形容词和副词，让你的英语表达更加生动准确！</p>
+        </div>
+    </div>
+
+    <!-- 导航菜单 -->
+    <div class="navigation">
+        <a href="#adjectives">形容词</a>
+        <a href="#adverbs">副词</a>
+        <a href="#difference">区别对比</a>
+        <a href="#practice">练习</a>
+        <a href="#summary">总结</a>
+        <a href="course.index.html">返回首页</a>
+    </div>
+
+    <script>
+        function toggleAnswer(button) {
+            const answer = button.nextElementSibling;
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                button.textContent = '查看答案';
+            } else {
+                answer.style.display = 'block';
+                button.textContent = '隐藏答案';
+            }
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('.navigation a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // 添加页面滚动效果
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.8) {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // 初始化样式
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.6s ease-out';
+            });
+        });
+    </script>
+</body>
+</html>

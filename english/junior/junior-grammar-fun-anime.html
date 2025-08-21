@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初中语法趣味课：动漫带你学</title>
+    <style>
+        :root {
+            --bg-a: #a18cd1; /* 紫 */
+            --bg-b: #fbc2eb; /* 粉 */
+            --ink: #1f2340;
+            --accent: #ff4d6d;
+            --accent-2: #5dd6ff;
+            --panel: #ffffff;
+            --bubble: #f7f9ff;
+            --bubble-border: #c5cae9;
+            --tip: #fff3e0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif; color: var(--ink); background: linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 100%); min-height: 100vh; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .hero { position: relative; background: var(--panel); border-radius: 20px; padding: 24px; box-shadow: 0 14px 32px rgba(0,0,0,0.14); display: flex; gap: 18px; align-items: center; overflow: hidden; }
+        .hero::after { content: ""; position: absolute; inset: -40% -10%; background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.7), transparent 40%), radial-gradient(circle at 80% 70%, rgba(93,214,255,0.25), transparent 45%); pointer-events: none; filter: blur(6px); }
+        .avatar { width: 96px; height: 96px; border-radius: 50%; background: conic-gradient(from 0deg, #ffe082, #ffcc80, #ffd180, #ffe082); display: grid; place-items: center; box-shadow: 0 10px 22px rgba(0,0,0,0.18), inset 0 0 0 6px rgba(255,255,255,0.8); animation: spinPulse 6s ease-in-out infinite; }
+        .avatar span { font-size: 48px; transform: translateY(2px); }
+        @keyframes spinPulse { 0%,100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(8deg) scale(1.04); } }
+        .hero h1 { font-size: 2.05rem; color: var(--accent); letter-spacing: 0.5px; }
+        .hero p { margin-top: 6px; color: #4a4f6a; }
+        .sticker { position: absolute; top: 6px; right: 10px; background: #000; color: #fff; padding: 4px 10px; border-radius: 12px; font-weight: bold; transform: rotate(6deg); box-shadow: 0 8px 18px rgba(0,0,0,0.2); }
+        .nav { position: fixed; top: 50%; right: 20px; transform: translateY(-50%); background: var(--panel); border-radius: 16px; padding: 10px; box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
+        .nav a { display: block; color: var(--accent); text-decoration: none; padding: 8px 12px; border-radius: 10px; font-size: 14px; }
+        .nav a:hover { background: #ffe0b2; }
+        .section { position: relative; margin-top: 20px; background: var(--panel); border-radius: 16px; padding: 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.1); border: 3px solid #000; outline: 6px solid rgba(0,0,0,0.05); }
+        .section::before { content: ""; position: absolute; inset: 0; border-radius: 14px; pointer-events: none; background-image: radial-gradient(circle at 12px 12px, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 10px 10px; opacity: .45; }
+        .section h2 { color: #e53935; display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; background: #fffbe6; border: 2px solid #000; border-radius: 10px; box-shadow: 3px 3px 0 #000; }
+        .tip { background: var(--tip); border: 2px dashed #ffb74d; padding: 12px; border-radius: 12px; margin-top: 12px; }
+        .dialog { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: start; margin-top: 12px; }
+        .char { width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e1f5fe, #b3e5fc); display: grid; place-items: center; box-shadow: 0 10px 18px rgba(0,0,0,0.15), inset 0 0 0 3px #90caf9; }
+        .char span { font-size: 34px; }
+        .bubble { position: relative; background: var(--bubble); border: 2px solid var(--bubble-border); padding: 14px 16px; border-radius: 14px; box-shadow: 3px 3px 0 #00000012; }
+        .bubble::after { content: ""; position: absolute; left: -10px; top: 16px; border: 10px solid transparent; border-right-color: var(--bubble); filter: drop-shadow(-1px 0px 0 var(--bubble-border)); }
+        .practice { margin-top: 14px; background: #fff0f6; padding: 16px; border-radius: 12px; border: 2px dashed #ff77a9; }
+        .practice button { margin-top: 8px; background: var(--accent); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; box-shadow: 0 6px 14px rgba(255,77,109,0.35); }
+        .practice button:hover { filter: brightness(1.05); }
+        .answer { display: none; margin-top: 8px; background: #e8f5e9; border-left: 4px solid #66bb6a; padding: 10px; border-radius: 8px; }
+        .sfx { position: absolute; font-weight: 900; color: #000; background: #fff; border: 3px solid #000; border-radius: 8px; padding: 4px 8px; transform: rotate(-8deg); text-shadow: 2px 2px 0 #ffea00, -2px -2px 0 #5dd6ff; box-shadow: 4px 4px 0 #000; opacity: 0.9; pointer-events: none; }
+        .footer { text-align: center; color: #3e2723; margin: 20px 0; }
+        @media (max-width: 768px) { .hero { flex-direction: column; align-items: flex-start; } .nav { position: static; transform: none; margin: 12px 0; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="sticker">NEW!</div>
+            <div class="avatar"><span>🦊</span></div>
+            <div>
+                <h1>初中语法趣味课：动漫带你学</h1>
+                <p>跟着狐狸老师和猫猫同学，用笑点和动漫剧情，一起轻松掌握语法！</p>
+            </div>
+        </div>
+
+        <div class="section" id="intro">
+            <h2>🎬 动漫开场：转学生的第一天</h2>
+            <div class="dialog">
+                <div class="char"><span>🦊</span></div>
+                <div class="bubble">嗨！我是狐狸老师。今天我们用一集“校园番”讲语法，OK 吗？</div>
+            </div>
+            <div class="dialog">
+                <div class="char"><span>🐱</span></div>
+                <div class="bubble">老师老师，我刚转学来，语法有点迷糊……能不能来点有趣的？</div>
+            </div>
+            <div class="tip">剧情提示：每个语法点配一段“片段剧情”+“笑点记忆”。看完就会！</div>
+        </div>
+
+        <div class="section" id="nouns">
+            <h2>📦 第一话：名词登场（Nouns）</h2>
+            <div class="dialog">
+                <div class="char"><span>🦊</span></div>
+                <div class="bubble">名词就是人、事、物的名字，比如 student, school, pizza。</div>
+            </div>
+            <div class="dialog">
+                <div class="char"><span>🐱</span></div>
+                <div class="bubble">我最爱的名词是——pizza！因为它能让我快乐学习！</div>
+            </div>
+            <div class="tip">笑点记忆：名词=名字。看到“东西名字”就想到名词！</div>
+            <div class="practice">
+                <div>从下列词中找出名词：run, pencil, quickly, teacher</div>
+                <button onclick="toggle(this)">查看答案</button>
+                <div class="answer"><strong>答案：</strong>pencil, teacher</div>
+            </div>
+        </div>
+
+        <div class="section" id="verbs">
+            <h2>🏃 第二话：动词行动（Verbs）</h2>
+            <div class="dialog"><div class="char"><span>🦊</span></div><div class="bubble">动词表示“动作或状态”，比如 run, is, think。</div></div>
+            <div class="dialog"><div class="char"><span>🐱</span></div><div class="bubble">我每天都在 run 去抢最后一块 pizza！</div></div>
+            <div class="tip">笑点记忆：动词=“做了啥”。句子里找动作，八成是动词！</div>
+            <div class="practice">
+                <div>选择句子中的动词：She <u>runs</u> fast.</div>
+                <button onclick="toggle(this)">查看答案</button>
+                <div class="answer"><strong>答案：</strong>runs</div>
+            </div>
+        </div>
+
+        <div class="section" id="adjectives">
+            <h2>🎨 第三话：形容词上色（Adjectives）</h2>
+            <div class="dialog"><div class="char"><span>🦊</span></div><div class="bubble">形容词给名词“上色”，比如 a funny cat, a big pizza。</div></div>
+            <div class="dialog"><div class="char"><span>🐱</span></div><div class="bubble">我是 funny，而且 pizza 要 big 的才够我吃！</div></div>
+            <div class="practice">
+                <div>给名词加上合适的形容词：a ____ day (sunny / quickly)</div>
+                <button onclick="toggle(this)">查看答案</button>
+                <div class="answer"><strong>答案：</strong>sunny</div>
+            </div>
+        </div>
+
+        <div class="section" id="adverbs">
+            <h2>⚡ 第四话：副词加速（Adverbs）</h2>
+            <div class="dialog"><div class="char"><span>🦊</span></div><div class="bubble">副词修饰动词、形容词或副词：run quickly, very big。</div></div>
+            <div class="dialog"><div class="char"><span>🐱</span></div><div class="bubble">我吃 pizza 的速度也很 quickly（开玩笑，正确是 quickly eat pizza）！</div></div>
+            <div class="practice">
+                <div>选择正确答案：He speaks (clear / clearly).</div>
+                <button onclick="toggle(this)">查看答案</button>
+                <div class="answer"><strong>答案：</strong>clearly</div>
+            </div>
+        </div>
+
+        <div class="section" id="summary">
+            <h2>🏁 大结局：语法合体！</h2>
+            <div class="tip">
+                名词=名字；动词=动作；形容词=上色；副词=加速器。<br/>
+                一句话：A funny cat runs quickly to a big pizza!
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>返回首页 👉 <a href="course.index.html">course.index.html</a></p>
+        </div>
+    </div>
+
+    <div class="nav">
+        <a href="#intro">开场</a>
+        <a href="#nouns">名词</a>
+        <a href="#verbs">动词</a>
+        <a href="#adjectives">形容词</a>
+        <a href="#adverbs">副词</a>
+        <a href="#summary">总结</a>
+        <a href="course.index.html">返回首页</a>
+    </div>
+
+    <script>
+        function toggle(btn) {
+            const ans = btn.nextElementSibling; ans.style.display = ans.style.display === 'block' ? 'none' : 'block';
+            btn.textContent = ans.style.display === 'block' ? '隐藏答案' : '查看答案';
+        }
+        // 漫画拟声词 SFX：滚动时随机出现小贴纸
+        const SFX_WORDS = ['啪!', '嗖~', '砰!', '咻!', '呀哈!', '嗷!'];
+        function spawnSfxNear(el) {
+            const s = document.createElement('div');
+            s.className = 'sfx';
+            s.textContent = SFX_WORDS[Math.floor(Math.random() * SFX_WORDS.length)];
+            const rect = el.getBoundingClientRect();
+            s.style.left = Math.max(8, rect.left + window.scrollX + rect.width - 80) + 'px';
+            s.style.top = Math.max(8, rect.top + window.scrollY - 10) + 'px';
+            document.body.appendChild(s);
+            s.animate([
+                { transform: 'translateY(0) rotate(-8deg)', opacity: 0.95 },
+                { transform: 'translateY(-16px) rotate(-4deg)', opacity: 0.0 }
+            ], { duration: 1200, easing: 'ease-out' }).onfinish = () => s.remove();
+        }
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    spawnSfxNear(e.target);
+                }
+            })
+        }, { threshold: 0.6 });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.section').forEach(sec => observer.observe(sec));
+        });
+        document.querySelectorAll('.nav a').forEach(a => {
+            a.addEventListener('click', e => {
+                const href = a.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const el = document.querySelector(href);
+                    el && el.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
