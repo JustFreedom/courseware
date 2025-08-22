@@ -53,6 +53,20 @@
         /* 提示信息 */
         .space-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 16px; border-radius: 20px; font-size: 14px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
         .space-hint.show { opacity: 1; }
+        
+        /* 触摸控制按钮 */
+        .touch-controls { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); display: none; gap: 20px; z-index: 1000; }
+        .touch-controls.show { display: flex; }
+        .touch-btn { width: 60px; height: 60px; border-radius: 50%; background: rgba(0,0,0,0.8); color: white; border: none; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s ease; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        .touch-btn:hover, .touch-btn:active { transform: scale(0.95); }
+        .touch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        @media (max-width: 768px) { 
+            .hero { flex-direction: column; align-items: flex-start; } 
+            .nav { position: static; transform: none; margin: 12px 0; }
+            .touch-controls { display: flex; }
+            .space-hint { display: none; }
+        }
         @media (max-width: 768px) { .hero { flex-direction: column; align-items: flex-start; } .nav { position: static; transform: none; margin: 12px 0; } }
     </style>
 </head>
@@ -67,8 +81,14 @@
             </div>
         </div>
         
-        <div class="space-hint" id="spaceHint">按空格键、↓、→继续，↑、←返回</div>
-
+                <div class="space-hint" id="spaceHint">按空格键、↓、→继续，↑、←返回</div>
+        
+        <!-- 触摸控制按钮 -->
+        <div class="touch-controls" id="touchControls">
+            <button class="touch-btn" id="prevBtn" title="返回上一步">⬅️</button>
+            <button class="touch-btn" id="nextBtn" title="继续下一步">➡️</button>
+        </div>
+        
         <div class="section" id="intro">
             <h2>🎬 动漫开场：转学生的第一天</h2>
             <div class="dialog">
@@ -160,9 +180,10 @@
     <script>
         // 按空格逐步展示内容的逻辑
         class ContentPresenter {
-            constructor() {
-                this.currentStep = 0;
-                this.steps = [
+                    constructor() {
+            this.currentStep = 0;
+            this.touchCooldown = false;
+            this.steps = [
                     // 步骤0：显示intro section + intro标题
                     () => this.showSectionWithFirstElement('#intro'),
                     
@@ -238,8 +259,7 @@
                     // 步骤24：显示footer
                     () => this.showElement('.footer'),
                     
-                    // 步骤25：显示nav
-                    () => this.showElement('.nav')
+
                 ];
                 
                 this.init();
@@ -263,13 +283,16 @@
                     }
                 });
                 
+                // 绑定触摸控制
+                this.bindTouchControls();
+                
                 // 显示提示
                 this.showSpaceHint();
             }
             
             hideAllElements() {
-                // 隐藏所有section容器和内容元素
-                document.querySelectorAll('.section, .dialog, .tip, .practice, .footer, .nav').forEach(el => {
+                // 隐藏所有section容器和内容元素，但不隐藏nav
+                document.querySelectorAll('.section, .dialog, .tip, .practice, .footer').forEach(el => {
                     el.style.opacity = '0';
                     el.style.transform = this.getInitialTransform(el);
                 });
@@ -279,6 +302,13 @@
                 if (hero) {
                     hero.style.opacity = '1';
                     hero.style.transform = 'translateX(0) translateY(0) scale(1)';
+                }
+                
+                // 确保nav是可见的
+                const nav = document.querySelector('.nav');
+                if (nav) {
+                    nav.style.opacity = '1';
+                    nav.style.transform = 'translateX(0) translateY(0) scale(1)';
                 }
             }
             
@@ -321,10 +351,37 @@
                 }
             }
             
+            scrollToCurrentElement() {
+                // 根据当前步骤找到应该显示的元素并滚动到它
+                if (this.currentStep < this.steps.length) {
+                    const step = this.steps[this.currentStep];
+                    const stepStr = step.toString();
+                    
+                    let targetElement = null;
+                    
+                    if (stepStr.includes('showSectionWithFirstElement')) {
+                        // 滚动到section
+                        const sectionSelector = stepStr.match(/['"]([^'"]+)['"]/)[1];
+                        targetElement = document.querySelector(sectionSelector);
+                    } else if (stepStr.includes('showElement')) {
+                        // 滚动到单个元素
+                        const elementSelector = stepStr.match(/['"]([^'"]+)['"]/)[1];
+                        targetElement = document.querySelector(elementSelector);
+                    }
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+            
             nextStep() {
                 if (this.currentStep < this.steps.length) {
                     this.steps[this.currentStep]();
                     this.currentStep++;
+                    
+                    // 更新触摸控制按钮状态
+                    this.updateTouchControls();
                     
                     // 更新提示
                     if (this.currentStep < this.steps.length) {
@@ -339,6 +396,12 @@
                 if (this.currentStep > 0) {
                     this.currentStep--;
                     this.hideCurrentStep();
+                    
+                    // 滚动到当前应该显示的元素位置
+                    this.scrollToCurrentElement();
+                    
+                    // 更新触摸控制按钮状态
+                    this.updateTouchControls();
                     
                     // 更新提示
                     if (this.currentStep < this.steps.length) {
@@ -399,6 +462,64 @@
             hideSpaceHint() {
                 const hint = document.getElementById('spaceHint');
                 hint.classList.remove('show');
+            }
+            
+            bindTouchControls() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                if (prevBtn && nextBtn) {
+                    // 使用触摸事件而不是点击事件，避免双击缩放
+                    prevBtn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.handleTouchAction('prev');
+                    }, { passive: false });
+                    
+                    nextBtn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.handleTouchAction('next');
+                    }, { passive: false });
+                    
+                    // 桌面端仍然使用点击事件
+                    prevBtn.addEventListener('click', (e) => {
+                        if (e.pointerType === 'mouse') {
+                            this.prevStep();
+                        }
+                    });
+                    
+                    nextBtn.addEventListener('click', (e) => {
+                        if (e.pointerType === 'mouse') {
+                            this.nextStep();
+                        }
+                    });
+                }
+            }
+            
+            handleTouchAction(action) {
+                // 防抖：300ms内只执行一次
+                if (this.touchCooldown) return;
+                
+                this.touchCooldown = true;
+                setTimeout(() => {
+                    this.touchCooldown = false;
+                }, 300);
+                
+                if (action === 'prev') {
+                    this.prevStep();
+                } else if (action === 'next') {
+                    this.nextStep();
+                }
+            }
+            
+            updateTouchControls() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                if (prevBtn && nextBtn) {
+                    // 更新按钮状态
+                    prevBtn.disabled = this.currentStep === 0;
+                    nextBtn.disabled = this.currentStep >= this.steps.length - 1;
+                }
             }
         }
         

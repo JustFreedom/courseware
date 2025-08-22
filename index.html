@@ -25,15 +25,15 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
+    <div class="container">
+        <div class="header">
         <h1>SweetData 英语课程中心</h1>
         <div>选择你的课程进入学习</div>
     </div>
     <div id="grid" class="grid"></div>
     <div class="footer">© 2025 SweetData</div>
-</div>
-<script>
+    </div>
+    <script>
     const DEFAULT_COURSES = [
         { id:'golden-grammar-adj-adv', title:'黄金语法：形容词&副词', description:'形容词与副词的系统学习与互动练习', path:'english/junior/golden-grammar-adj-adv.html', tags:['初中','语法'] },
         { id:'junior-grammar-fun-anime', title:'初中语法趣味课：动漫带你学', description:'轻松幽默、动漫角色引导的初中语法入门', path:'english/junior/junior-grammar-fun-anime.html', tags:['初中','趣味','动漫'] }
@@ -63,6 +63,6 @@
         });
     }
     (async()=>{ render(await loadCourses()); })();
-</script>
+    </script>
 </body>
 </html>
