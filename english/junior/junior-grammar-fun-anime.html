@@ -33,18 +33,26 @@
         .section { position: relative; margin-top: 20px; background: var(--panel); border-radius: 16px; padding: 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.1); border: 3px solid #000; outline: 6px solid rgba(0,0,0,0.05); }
         .section::before { content: ""; position: absolute; inset: 0; border-radius: 14px; pointer-events: none; background-image: radial-gradient(circle at 12px 12px, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 10px 10px; opacity: .45; }
         .section h2 { color: #e53935; display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; background: #fffbe6; border: 2px solid #000; border-radius: 10px; box-shadow: 3px 3px 0 #000; }
-        .tip { background: var(--tip); border: 2px dashed #ffb74d; padding: 12px; border-radius: 12px; margin-top: 12px; }
-        .dialog { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: start; margin-top: 12px; }
+        .tip { background: var(--tip); border: 2px dashed #ffb74d; padding: 12px; border-radius: 12px; margin-top: 12px; opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .tip.show { opacity: 1; transform: scale(1); }
+        .dialog { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: start; margin-top: 12px; opacity: 0; transform: translateX(-20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .dialog.show { opacity: 1; transform: translateX(0); }
         .char { width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e1f5fe, #b3e5fc); display: grid; place-items: center; box-shadow: 0 10px 18px rgba(0,0,0,0.15), inset 0 0 0 3px #90caf9; }
         .char span { font-size: 34px; }
         .bubble { position: relative; background: var(--bubble); border: 2px solid var(--bubble-border); padding: 14px 16px; border-radius: 14px; box-shadow: 3px 3px 0 #00000012; }
         .bubble::after { content: ""; position: absolute; left: -10px; top: 16px; border: 10px solid transparent; border-right-color: var(--bubble); filter: drop-shadow(-1px 0px 0 var(--bubble-border)); }
-        .practice { margin-top: 14px; background: #fff0f6; padding: 16px; border-radius: 12px; border: 2px dashed #ff77a9; }
+        .practice { margin-top: 14px; background: #fff0f6; padding: 16px; border-radius: 12px; border: 2px dashed #ff77a9; opacity: 0; transform: translateY(15px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .practice.show { opacity: 1; transform: translateY(0); }
         .practice button { margin-top: 8px; background: var(--accent); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; box-shadow: 0 6px 14px rgba(255,77,109,0.35); }
         .practice button:hover { filter: brightness(1.05); }
         .answer { display: none; margin-top: 8px; background: #e8f5e9; border-left: 4px solid #66bb6a; padding: 10px; border-radius: 8px; }
         .sfx { position: absolute; font-weight: 900; color: #000; background: #fff; border: 3px solid #000; border-radius: 8px; padding: 4px 8px; transform: rotate(-8deg); text-shadow: 2px 2px 0 #ffea00, -2px -2px 0 #5dd6ff; box-shadow: 4px 4px 0 #000; opacity: 0.9; pointer-events: none; }
-        .footer { text-align: center; color: #3e2723; margin: 20px 0; }
+        .footer { text-align: center; color: #3e2723; margin: 20px 0; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .footer.show { opacity: 1; transform: translateY(0); }
+        
+        /* 提示信息 */
+        .space-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 16px; border-radius: 20px; font-size: 14px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .space-hint.show { opacity: 1; }
         @media (max-width: 768px) { .hero { flex-direction: column; align-items: flex-start; } .nav { position: static; transform: none; margin: 12px 0; } }
     </style>
 </head>
@@ -58,6 +66,8 @@
                 <p>跟着狐狸老师和猫猫同学，用笑点和动漫剧情，一起轻松掌握语法！</p>
             </div>
         </div>
+        
+        <div class="space-hint" id="spaceHint">按空格键继续...</div>
 
         <div class="section" id="intro">
             <h2>🎬 动漫开场：转学生的第一天</h2>
@@ -148,43 +158,210 @@
     </div>
 
     <script>
+        // 按空格逐步展示内容的逻辑
+        class ContentPresenter {
+            constructor() {
+                this.currentStep = 0;
+                this.steps = [
+                    // 步骤0：显示intro标题
+                    () => this.showElement('#intro h2'),
+                    
+                    // 步骤1：显示intro第一个dialog
+                    () => this.showElement('#intro .dialog:nth-child(2)'),
+                    
+                    // 步骤2：显示intro第二个dialog
+                    () => this.showElement('#intro .dialog:nth-child(3)'),
+                    
+                    // 步骤3：显示intro的tip
+                    () => this.showElement('#intro .tip'),
+                    
+                    // 步骤4：显示nouns标题
+                    () => this.showElement('#nouns h2'),
+                    
+                    // 步骤5：显示nouns第一个dialog
+                    () => this.showElement('#nouns .dialog:nth-child(2)'),
+                    
+                    // 步骤6：显示nouns第二个dialog
+                    () => this.showElement('#nouns .dialog:nth-child(3)'),
+                    
+                    // 步骤7：显示nouns的tip
+                    () => this.showElement('#nouns .tip'),
+                    
+                    // 步骤8：显示nouns的practice
+                    () => this.showElement('#nouns .practice'),
+                    
+                    // 步骤9：显示verbs标题
+                    () => this.showElement('#verbs h2'),
+                    
+                    // 步骤10：显示verbs第一个dialog
+                    () => this.showElement('#verbs .dialog:nth-child(2)'),
+                    
+                    // 步骤11：显示verbs第二个dialog
+                    () => this.showElement('#verbs .dialog:nth-child(3)'),
+                    
+                    // 步骤12：显示verbs的tip
+                    () => this.showElement('#verbs .tip'),
+                    
+                    // 步骤13：显示verbs的practice
+                    () => this.showElement('#verbs .practice'),
+                    
+                    // 步骤14：显示adjectives标题
+                    () => this.showElement('#adjectives h2'),
+                    
+                    // 步骤15：显示adjectives第一个dialog
+                    () => this.showElement('#adjectives .dialog:nth-child(2)'),
+                    
+                    // 步骤16：显示adjectives第二个dialog
+                    () => this.showElement('#adjectives .dialog:nth-child(3)'),
+                    
+                    // 步骤17：显示adjectives的practice
+                    () => this.showElement('#adjectives .practice'),
+                    
+                    // 步骤18：显示adverbs标题
+                    () => this.showElement('#adverbs h2'),
+                    
+                    // 步骤19：显示adverbs第一个dialog
+                    () => this.showElement('#adverbs .dialog:nth-child(2)'),
+                    
+                    // 步骤20：显示adverbs第二个dialog
+                    () => this.showElement('#adverbs .dialog:nth-child(3)'),
+                    
+                    // 步骤21：显示adverbs的practice
+                    () => this.showElement('#adverbs .practice'),
+                    
+                    // 步骤22：显示summary标题
+                    () => this.showElement('#summary h2'),
+                    
+                    // 步骤23：显示summary的tip
+                    () => this.showElement('#summary .tip'),
+                    
+                    // 步骤24：显示footer
+                    () => this.showElement('.footer'),
+                    
+                    // 步骤25：显示nav
+                    () => this.showElement('.nav')
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                // 隐藏所有需要逐步展示的元素
+                this.hideAllElements();
+                
+                // 显示第一步
+                this.nextStep();
+                
+                // 绑定空格键事件
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.nextStep();
+                    }
+                });
+                
+                // 显示提示
+                this.showSpaceHint();
+            }
+            
+            hideAllElements() {
+                // 只隐藏内容元素，不隐藏section容器
+                document.querySelectorAll('.dialog, .tip, .practice, .footer, .nav').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = this.getInitialTransform(el);
+                });
+                
+                // 确保hero是可见的
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    hero.style.opacity = '1';
+                    hero.style.transform = 'translateX(0) translateY(0) scale(1)';
+                }
+            }
+            
+            getInitialTransform(element) {
+                if (element.classList.contains('dialog')) return 'translateX(-20px)';
+                if (element.classList.contains('tip')) return 'scale(0.95)';
+                if (element.classList.contains('practice')) return 'translateY(15px)';
+                if (element.classList.contains('footer')) return 'translateY(20px)';
+                return 'translateY(0)';
+            }
+            
+            showElement(selector) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0) translateY(0) scale(1)';
+                    
+                    // 滚动到元素位置
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
+            nextStep() {
+                if (this.currentStep < this.steps.length) {
+                    this.steps[this.currentStep]();
+                    this.currentStep++;
+                    
+                    // 更新提示
+                    if (this.currentStep < this.steps.length) {
+                        this.showSpaceHint();
+                    } else {
+                        this.hideSpaceHint();
+                    }
+                }
+            }
+            
+            spawnSfx(element) {
+                const SFX_WORDS = ['啪!', '嗖~', '砰!', '咻!', '呀哈!', '嗷!'];
+                const s = document.createElement('div');
+                s.className = 'sfx';
+                s.textContent = SFX_WORDS[Math.floor(Math.random() * SFX_WORDS.length)];
+                
+                const rect = element.getBoundingClientRect();
+                s.style.left = Math.max(8, rect.left + window.scrollX + rect.width - 80) + 'px';
+                s.style.top = Math.max(8, rect.top + window.scrollY - 10) + 'px';
+                
+                document.body.appendChild(s);
+                s.animate([
+                    { transform: 'translateY(0) rotate(-8deg)', opacity: 0.95 },
+                    { transform: 'translateY(-16px) rotate(-4deg)', opacity: 0.0 }
+                ], { duration: 1200, easing: 'ease-out' }).onfinish = () => s.remove();
+            }
+            
+            showSpaceHint() {
+                const hint = document.getElementById('spaceHint');
+                hint.classList.add('show');
+            }
+            
+            hideSpaceHint() {
+                const hint = document.getElementById('spaceHint');
+                hint.classList.remove('show');
+            }
+        }
+        
+        // 练习答案切换功能
         function toggle(btn) {
-            const ans = btn.nextElementSibling; ans.style.display = ans.style.display === 'block' ? 'none' : 'block';
+            const ans = btn.nextElementSibling;
+            ans.style.display = ans.style.display === 'block' ? 'none' : 'block';
             btn.textContent = ans.style.display === 'block' ? '隐藏答案' : '查看答案';
         }
-        // 漫画拟声词 SFX：滚动时随机出现小贴纸
-        const SFX_WORDS = ['啪!', '嗖~', '砰!', '咻!', '呀哈!', '嗷!'];
-        function spawnSfxNear(el) {
-            const s = document.createElement('div');
-            s.className = 'sfx';
-            s.textContent = SFX_WORDS[Math.floor(Math.random() * SFX_WORDS.length)];
-            const rect = el.getBoundingClientRect();
-            s.style.left = Math.max(8, rect.left + window.scrollX + rect.width - 80) + 'px';
-            s.style.top = Math.max(8, rect.top + window.scrollY - 10) + 'px';
-            document.body.appendChild(s);
-            s.animate([
-                { transform: 'translateY(0) rotate(-8deg)', opacity: 0.95 },
-                { transform: 'translateY(-16px) rotate(-4deg)', opacity: 0.0 }
-            ], { duration: 1200, easing: 'ease-out' }).onfinish = () => s.remove();
-        }
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    spawnSfxNear(e.target);
-                }
-            })
-        }, { threshold: 0.6 });
+        
+        // 导航链接平滑滚动
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.section').forEach(sec => observer.observe(sec));
-        });
-        document.querySelectorAll('.nav a').forEach(a => {
-            a.addEventListener('click', e => {
-                const href = a.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    e.preventDefault();
-                    const el = document.querySelector(href);
-                    el && el.scrollIntoView({ behavior: 'smooth' });
-                }
+            // 初始化内容展示器
+            new ContentPresenter();
+            
+            // 绑定导航链接
+            document.querySelectorAll('.nav a').forEach(a => {
+                a.addEventListener('click', e => {
+                    const href = a.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const el = document.querySelector(href);
+                        el && el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
             });
         });
     </script>
