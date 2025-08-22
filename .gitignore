@@ -1,0 +1,42 @@
+# ---> Java
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# ---> Gradle
+.gradle
+build
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# ---> IDEA project files
+.idea
+*.iml
+
+# Temp files #
+~.*
+*.swp
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!/gradle/wrapper/gradle-wrapper.jar
+
+# MacOS hidden files #
+.DS_Store
+
+# Local configuration
+#application-*.yml
+logs
+rebel*.xml
+out
+
+application-*.yml
+!/app/src/main/resources/env/*.yml
