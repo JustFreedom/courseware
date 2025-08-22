@@ -20,6 +20,8 @@
         .actions { display:flex; gap:10px; }
         .btn { text-decoration:none; background:#185a9d; color:#fff; padding:8px 12px; border-radius:10px; font-size:.9rem; text-align:center; flex:1; }
         .btn.secondary { background:#6c757d; }
+        .search { display:flex; justify-content:center; margin: 12px 0 18px; }
+        .search input { width:100%; max-width:560px; padding:10px 14px; border-radius:12px; border: none; outline: none; box-shadow: 0 6px 18px rgba(0,0,0,0.12); font-size: 15px; }
         .footer { text-align:center; color:#fff; opacity:.85; margin-top:26px; }
         @media (max-width:640px){ .header h1{ font-size:1.8rem } }
     </style>
@@ -29,6 +31,9 @@
         <div class="header">
         <h1>SweetData 英语课程中心</h1>
         <div>选择你的课程进入学习</div>
+    </div>
+    <div class="search">
+        <input id="searchInput" type="text" placeholder="搜索课程：标题、描述、标签（空格分词）">
     </div>
     <div id="grid" class="grid"></div>
     <div class="footer">© 2025 SweetData</div>
@@ -62,7 +67,30 @@
             grid.appendChild(card);
         });
     }
-    (async()=>{ render(await loadCourses()); })();
+    function buildSearchText(course){
+        return `${course.title} ${(course.description||'')} ${(course.tags||[]).join(' ')}`;
+    }
+    function normalize(text){
+        return (text||'').toLowerCase().replace(/[\s\-_：:;；,，.。/\\|\[\]{}()（）'"“”‘’&@#?!！？·•]+/g,'');
+    }
+    function setupSearch(all){
+        const input = document.getElementById('searchInput');
+        input.addEventListener('input', ()=>{
+            const raw = input.value || '';
+            const tokens = raw.trim().split(/\s+/).filter(Boolean);
+            if(!tokens.length){ render(all); return; }
+            const filtered = all.filter(c => {
+                const textN = normalize(buildSearchText(c));
+                return tokens.every(tok => textN.includes(normalize(tok)));
+            });
+            render(filtered);
+        });
+    }
+    (async()=>{
+        const all = await loadCourses();
+        render(all);
+        setupSearch(all);
+    })();
     </script>
 </body>
 </html>
