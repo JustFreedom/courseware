@@ -67,7 +67,7 @@
             </div>
         </div>
         
-        <div class="space-hint" id="spaceHint">按空格键继续...</div>
+        <div class="space-hint" id="spaceHint">按空格键、↓、→继续，↑、←返回</div>
 
         <div class="section" id="intro">
             <h2>🎬 动漫开场：转学生的第一天</h2>
@@ -163,8 +163,8 @@
             constructor() {
                 this.currentStep = 0;
                 this.steps = [
-                    // 步骤0：显示intro标题
-                    () => this.showElement('#intro h2'),
+                    // 步骤0：显示intro section + intro标题
+                    () => this.showSectionWithFirstElement('#intro'),
                     
                     // 步骤1：显示intro第一个dialog
                     () => this.showElement('#intro .dialog:nth-child(2)'),
@@ -175,8 +175,8 @@
                     // 步骤3：显示intro的tip
                     () => this.showElement('#intro .tip'),
                     
-                    // 步骤4：显示nouns标题
-                    () => this.showElement('#nouns h2'),
+                    // 步骤4：显示nouns section + nouns标题
+                    () => this.showSectionWithFirstElement('#nouns'),
                     
                     // 步骤5：显示nouns第一个dialog
                     () => this.showElement('#nouns .dialog:nth-child(2)'),
@@ -190,8 +190,8 @@
                     // 步骤8：显示nouns的practice
                     () => this.showElement('#nouns .practice'),
                     
-                    // 步骤9：显示verbs标题
-                    () => this.showElement('#verbs h2'),
+                    // 步骤9：显示verbs section + verbs标题
+                    () => this.showSectionWithFirstElement('#verbs'),
                     
                     // 步骤10：显示verbs第一个dialog
                     () => this.showElement('#verbs .dialog:nth-child(2)'),
@@ -205,8 +205,8 @@
                     // 步骤13：显示verbs的practice
                     () => this.showElement('#verbs .practice'),
                     
-                    // 步骤14：显示adjectives标题
-                    () => this.showElement('#adjectives h2'),
+                    // 步骤14：显示adjectives section + adjectives标题
+                    () => this.showSectionWithFirstElement('#adjectives'),
                     
                     // 步骤15：显示adjectives第一个dialog
                     () => this.showElement('#adjectives .dialog:nth-child(2)'),
@@ -217,8 +217,8 @@
                     // 步骤17：显示adjectives的practice
                     () => this.showElement('#adjectives .practice'),
                     
-                    // 步骤18：显示adverbs标题
-                    () => this.showElement('#adverbs h2'),
+                    // 步骤18：显示adverbs section + adverbs标题
+                    () => this.showElement('#adverbs'),
                     
                     // 步骤19：显示adverbs第一个dialog
                     () => this.showElement('#adverbs .dialog:nth-child(2)'),
@@ -229,8 +229,8 @@
                     // 步骤21：显示adverbs的practice
                     () => this.showElement('#adverbs .practice'),
                     
-                    // 步骤22：显示summary标题
-                    () => this.showElement('#summary h2'),
+                    // 步骤22：显示summary section + summary标题
+                    () => this.showSectionWithFirstElement('#summary'),
                     
                     // 步骤23：显示summary的tip
                     () => this.showElement('#summary .tip'),
@@ -252,11 +252,14 @@
                 // 显示第一步
                 this.nextStep();
                 
-                // 绑定空格键事件
+                // 绑定键盘事件
                 document.addEventListener('keydown', (e) => {
-                    if (e.code === 'Space') {
+                    if (e.code === 'Space' || e.code === 'ArrowDown' || e.code === 'ArrowRight') {
                         e.preventDefault();
                         this.nextStep();
+                    } else if (e.code === 'ArrowUp' || e.code === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevStep();
                     }
                 });
                 
@@ -265,8 +268,8 @@
             }
             
             hideAllElements() {
-                // 只隐藏内容元素，不隐藏section容器
-                document.querySelectorAll('.dialog, .tip, .practice, .footer, .nav').forEach(el => {
+                // 隐藏所有section容器和内容元素
+                document.querySelectorAll('.section, .dialog, .tip, .practice, .footer, .nav').forEach(el => {
                     el.style.opacity = '0';
                     el.style.transform = this.getInitialTransform(el);
                 });
@@ -280,6 +283,7 @@
             }
             
             getInitialTransform(element) {
+                if (element.classList.contains('section')) return 'translateY(20px)';
                 if (element.classList.contains('dialog')) return 'translateX(-20px)';
                 if (element.classList.contains('tip')) return 'scale(0.95)';
                 if (element.classList.contains('practice')) return 'translateY(15px)';
@@ -298,6 +302,25 @@
                 }
             }
             
+            showSectionWithFirstElement(sectionSelector) {
+                const section = document.querySelector(sectionSelector);
+                if (section) {
+                    // 显示section容器
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateX(0) translateY(0) scale(1)';
+                    
+                    // 显示section下的第一个元素（标题）
+                    const firstElement = section.querySelector('h2');
+                    if (firstElement) {
+                        firstElement.style.opacity = '1';
+                        firstElement.style.transform = 'translateX(0) translateY(0) scale(1)';
+                    }
+                    
+                    // 滚动到section位置
+                    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
             nextStep() {
                 if (this.currentStep < this.steps.length) {
                     this.steps[this.currentStep]();
@@ -308,6 +331,45 @@
                         this.showSpaceHint();
                     } else {
                         this.hideSpaceHint();
+                    }
+                }
+            }
+            
+            prevStep() {
+                if (this.currentStep > 0) {
+                    this.currentStep--;
+                    this.hideCurrentStep();
+                    
+                    // 更新提示
+                    if (this.currentStep < this.steps.length) {
+                        this.showSpaceHint();
+                    }
+                }
+            }
+            
+            hideCurrentStep() {
+                // 根据当前步骤隐藏相应的元素
+                if (this.currentStep < this.steps.length) {
+                    const step = this.steps[this.currentStep];
+                    const stepStr = step.toString();
+                    
+                    // 根据步骤内容判断需要隐藏什么
+                    if (stepStr.includes('showSectionWithFirstElement')) {
+                        // 隐藏整个section
+                        const sectionSelector = stepStr.match(/['"]([^'"]+)['"]/)[1];
+                        const section = document.querySelector(sectionSelector);
+                        if (section) {
+                            section.style.opacity = '0';
+                            section.style.transform = this.getInitialTransform(section);
+                        }
+                    } else if (stepStr.includes('showElement')) {
+                        // 隐藏单个元素
+                        const elementSelector = stepStr.match(/['"]([^'"]+)['"]/)[1];
+                        const element = document.querySelector(elementSelector);
+                        if (element) {
+                            element.style.opacity = '0';
+                            element.style.transform = this.getInitialTransform(element);
+                        }
                     }
                 }
             }
